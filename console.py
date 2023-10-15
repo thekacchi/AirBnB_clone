@@ -126,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
                     pass
                 setattr(obj, attribute, value)
                 obj.save()
-    
+
     def do_quit(self, arg):
         """Quits the cmd module"""
         return True
