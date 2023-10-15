@@ -1,107 +1,115 @@
+#!/usr/bin/python3
 import cmd
-import json
+from models import storage
+from models.base_model import BaseModel
 
-class AirBnBCommand(cmd.Cmd):
-    """The entry point for the console"""
-    prompt = "(airbnb) "
+class HBNBCommand(cmd.Cmd):
+    prompt = "(hbnb) "
+    valid_classes = ["BaseModel"]
 
-    class_names = ["BaseModel", "User", "Place", "Amenity"]
+    def emptyline(self):
+        pass
 
     def do_create(self, arg):
-        """Creates a new instance of a class."""
-
-        args = arg.split()
-        class_name = args[0]
-        if class_name not in self.class_names:
+        if not arg:
+            print("** class name missing **")
+            return
+        if arg not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = eval(class_name)()  # pylint: disable=eval-used
+        new_instance = HBNBCommand.valid_classes[arg]()
         new_instance.save()
         print(new_instance.id)
 
     def do_show(self, arg):
-        """Shows an instance of a class."""
-
         args = arg.split()
-        class_name = args[0]
-        instance_id = args[1]
-        if class_name not in self.class_names:
+        if not arg:
+            print("** class name missing **")
+            return
+        if args[0] not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
 
+        key = "{}.{}".format(args[0], args[1])
         all_objs = storage.all()
-        obj = all_objs.get(f"{class_name}.{instance_id}")
+        obj = all_objs.get(key)
         if obj:
             print(obj)
         else:
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Destroys an instance of a class."""
-
         args = arg.split()
-        class_name = args[0]
-        instance_id = args[1]
-        if class_name not in self.class_names:
+        if not arg:
+            print("** class name missing **")
+            return
+        if args[0] not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
 
+        key = "{}.{}".format(args[0], args[1])
         all_objs = storage.all()
-        obj = all_objs.get(f"{class_name}.{instance_id}")
+        obj = all_objs.get(key)
         if obj:
-            del all_objs[f"{class_name}.{instance_id}"]
+            del all_objs[key]
             storage.save()
         else:
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Shows all instances of a class."""
-
-        args = arg.split()
-        class_name = args[0]
-        if class_name not in self.class_names:
-            print("** class doesn't exist **")
-            return
-
-        all_objs = storage.all()
-        objs_list = []
-        for obj in all_objs.values():
-            if obj.__class__.__name__ == class_name:
+        if not arg:
+            all_objs = storage.all()
+            objs_list = []
+            for obj in all_objs.values():
                 objs_list.append(str(obj))
-        print(objs_list)
+            print(objs_list)
 
     def do_update(self, arg):
-        """Updates an instance of a class."""
-
         args = arg.split()
-        class_name = args[0]
-        instance_id = args[1]
-        attribute_name = args[2]
-        new_value = args[3]
-        if class_name not in self.class_names:
+        if not arg:
+            print("** class name missing **")
+            return
+        if args[0] not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
-
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        key = "{}.{}".format(args[0], args[1])
         all_objs = storage.all()
-        obj = all_objs.get(f"{class_name}.{instance_id}")
-        if obj:
-            setattr(obj, attribute_name, new_value)
-            obj.save()
-        else:
+        obj = all_objs.get(key)
+        if not obj:
             print("** no instance found **")
+            return
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+        if len(args) < 4:
+            print("** value missing **")
+            return
+        attribute = args[2]
+        value = args[3]
+        try:
+            attr_type = type(getattr(obj, attribute))
+            value = attr_type(value)
+        except AttributeError:
+            pass
+        setattr(obj, attribute, value)
+        obj.save()
 
     def do_quit(self, arg):
-        """Quit the program"""
         return True
 
     def do_EOF(self, arg):
-        """Exit the program"""
+        print()
         return True
 
-    def emptyline(self):
-        """Do nothing on an empty line"""
-        pass
-
-if __name__ == "__main__":
-    AirBnBCommand().cmdloop()
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
