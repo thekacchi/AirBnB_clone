@@ -2,9 +2,9 @@
 """"AirBnB console"""
 
 import cmd
-import models
-from models import storage
 from models.base_model import BaseModel
+from models.__init__ import storage
+from models.user import User
 
 valid_class_names = ["BaseModel", "User", "Place", "Review"]
 
