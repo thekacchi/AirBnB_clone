@@ -11,14 +11,20 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
+        """
+        Creates a new instance of a specified class and saves it to the JSON file.
+        Usage: create <class_name>
+        """
         if not arg:
             print("** class name missing **")
             return
-        if arg not in HBNBCommand.valid_classes:
+
+        class_name = arg.strip()
+        if class_name not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.valid_classes[arg]()
+        new_instance = HBNBCommand.valid_classes[class_name]()
         new_instance.save()
         print(new_instance.id)
 
