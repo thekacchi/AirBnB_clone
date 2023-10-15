@@ -3,7 +3,8 @@
 
 import uuid
 from datetime import datetime
-
+from models import storage
+from models.engine.file_storage import FileStorage
 
 class BaseModel:
     """The BaseModel class definition"""
@@ -22,6 +23,8 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
+            storage.save()
 
     def __str__(self):
         """The string method"""
@@ -30,12 +33,13 @@ class BaseModel:
 
     def save(self):
         """The save method"""
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.datetime.now()
+        storage.save()
 
     def to_dict(self):
         """The to_dict mathod"""
-        model_dict = self.__dict__.copy()
-        model_dict['__class__'] = self.__class__.__name__
-        model_dict['created_at'] = self.created_at.isoformat()
-        model_dict['updated_at'] = self.updated_at.isoformat()
-        return model_dict
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = self.__class__.__name__
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+        return obj_dict
