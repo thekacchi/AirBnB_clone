@@ -3,8 +3,8 @@
 
 import uuid
 from datetime import datetime
-#from models import storage
-#from models.engine.file_storage import FileStorage
+from models import storage
+from models.engine.file_storage import FileStorage
 
 class BaseModel:
     """The BaseModel class definition"""
