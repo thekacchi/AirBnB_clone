@@ -9,7 +9,7 @@ from models.user import User
 valid_class_names = ["BaseModel"]
 
 class HBNBCommand(cmd.Cmd):
-    """
+     """
     The entry point for the console
     """
     prompt = '(hbnb) '
