@@ -9,6 +9,7 @@ from models.engine.file_storage import FileStorage
 class BaseModel:
     """The BaseModel class definition"""
     def __init__(self, *args, **kwargs):
+        """The init method for BaseModel class"""
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':

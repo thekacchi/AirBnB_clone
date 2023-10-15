@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Serialization and deserialization of the JSON file
-"""
+"""Serialization and deserialization of the JSON file"""
 
 import json
 # from models.base_model import BaseModel
