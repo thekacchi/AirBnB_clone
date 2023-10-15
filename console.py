@@ -21,13 +21,11 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-
-        class_name = arg.strip()
-        if class_name not in HBNBCommand.valid_classes:
+        if arg not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.valid_classes[class_name]()
+        new_instance = HBNBCommand.valid_classes[arg]()
         new_instance.save()
         print(new_instance.id)
 
@@ -76,12 +74,20 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """the all method"""
+        args = arg.split()
+        all_objs = storage.all()
+        objs_list = []
         if not arg:
-            all_objs = storage.all()
-            objs_list = []
             for obj in all_objs.values():
                 objs_list.append(str(obj))
-            print(objs_list)
+        else:
+            if args[0] not in HBNBCommand.valid_classes:
+                print("** class doesn't exist **")
+                return
+            for key, obj in all_objs.items():
+                if key.split('.')[0] == args[0]:
+                    objs_list.append(str(obj))
+        print(objs_list)
 
     def do_update(self, arg):
         """The update method"""
@@ -109,14 +115,18 @@ class HBNBCommand(cmd.Cmd):
             return
         attribute = args[2]
         value = args[3]
-        try:
-            attr_type = type(getattr(obj, attribute))
-            value = attr_type(value)
-        except AttributeError:
-            pass
-        setattr(obj, attribute, value)
-        obj.save()
-
+        if hasattr(obj, attribute):
+            if attribute == "created_at" or attribute == "updated_at":
+                pass
+            else:
+                attr_type = type(getattr(obj, attribute))
+                try:
+                    value = attr_type(value)
+                except ValueError:
+                    pass
+                setattr(obj, attribute, value)
+                obj.save()
+    
     def do_quit(self, arg):
         """Quits the cmd module"""
         return True
