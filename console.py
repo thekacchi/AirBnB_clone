@@ -3,7 +3,9 @@ import cmd
 from models import storage
 from models.base_model import BaseModel
 
+
 class HBNBCommand(cmd.Cmd):
+    """The HBNBC command"""
     prompt = "(hbnb) "
     valid_classes = ["BaseModel"]
 
@@ -12,8 +14,9 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """
-        Creates a new instance of a specified class and saves it to the JSON file.
-        Usage: create <class_name>
+           Creates a new instance of a specified class
+           and saves it to the JSON file.
+           Usage: create <class_name>
         """
         if not arg:
             print("** class name missing **")
@@ -29,6 +32,7 @@ class HBNBCommand(cmd.Cmd):
         print(new_instance.id)
 
     def do_show(self, arg):
+        """the show method"""
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -49,6 +53,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
+        """The destroy method"""
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -70,6 +75,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
+        """the all method"""
         if not arg:
             all_objs = storage.all()
             objs_list = []
@@ -78,6 +84,7 @@ class HBNBCommand(cmd.Cmd):
             print(objs_list)
 
     def do_update(self, arg):
+        """The update method"""
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -111,11 +118,14 @@ class HBNBCommand(cmd.Cmd):
         obj.save()
 
     def do_quit(self, arg):
+        """Quits the cmd module"""
         return True
 
     def do_EOF(self, arg):
+        """End of file method"""
         print()
         return True
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
