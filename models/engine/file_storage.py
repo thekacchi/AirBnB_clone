@@ -56,3 +56,7 @@ class FileStorage:
                         self.__objects[key] = class_type(**value)
         except FileNotFoundError:
             pass
+                    if class_type:
+                        self.__objects[key] = class_type(**value)
+        except FileNotFoundError:
+            pass
