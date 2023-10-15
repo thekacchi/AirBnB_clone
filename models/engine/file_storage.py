@@ -4,7 +4,38 @@ Serialization and deserialization of the JSON file
 """
 
 import json
-# from models.base_model import BaseModel
+import os
+
+class FileStorage:
+    __file_path = "file.json"
+    __objects = {}
+
+    def all(self):
+        """Return the dictionary __objects."""
+        return FileStorage.__objects
+
+    def new(self, obj):
+        """Set in __objects the obj with key <obj class name>.id."""
+        key = "{}.{}".format(obj.__class__.____name__, obj.id)
+        FileStorage.__objects[key] = obj
+
+    def save(self):
+        """Serializes __objects to the JSON file."""
+        serialized_objs = {}
+        for key, obj in self.__objects.items():
+            serialized_objs[key] = obj.to_dict()
+        with open(self.__file_path, 'w', encoding='utf-8') as f:
+            json.dump(serialized_objs, f)
+
+    def reload(self):
+        """Deserializes the JSON file to __objects if it exists."""
+        if os.path.isfile(self.__file_path):
+            with open(self.__file_path, 'r', encoding='utf-8') as f:
+                obj_dict = json.load(f)
+                for key, value in obj_dict.items():
+                    class_name = value['__class__']
+                    obj = eval(class_name)(**value)
+                    self.__objects[key] = obj
 
 
 class FileStorage:
