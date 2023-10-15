@@ -64,12 +64,20 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
+        args = arg.split()
+        all_objs = storage.all()
+        objs_list = []
         if not arg:
-            all_objs = storage.all()
-            objs_list = []
             for obj in all_objs.values():
                 objs_list.append(str(obj))
-            print(objs_list)
+        else:
+            if args[0] not in HBNBCommand.valid_classes:
+                print("** class doesn't exist **")
+                return
+            for key, obj in all_objs.items():
+                if key.split('.')[0] == args[0]:
+                    objs_list.append(str(obj))
+        print(objs_list)
 
     def do_update(self, arg):
         args = arg.split()
@@ -96,23 +104,20 @@ class HBNBCommand(cmd.Cmd):
             return
         attribute = args[2]
         value = args[3]
-        try:
-            attr_type = type(getattr(obj, attribute))
-            value = attr_type(value)
-        except AttributeError:
-            pass
-        setattr(obj, attribute, value)
-        obj.save()
-
+        if hasattr(obj, attribute):
+            if attribute == "created_at" or attribute == "updated_at":
+                pass
+            else:
+                attr_type = type(getattr(obj, attribute))
+                try:
+                    value = attr_type(value)
+                except ValueError:
+                    pass
+                setattr(obj, attribute, value)
+                obj.save()
+    
     def do_quit(self, arg):
         return True
-
-    def do_EOF(self, arg):
-        print()
-        return True
-
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()
 
     def do_EOF(self, arg):
         print()
