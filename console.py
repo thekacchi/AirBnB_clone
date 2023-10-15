@@ -1,18 +1,21 @@
 #!/usr/bin/python3
+""""AirBnB console"""
+
 import cmd
 
-"""AirBnB console """
-
 class HBNBCommand(cmd.Cmd):
-    prompt = "(hbnb) "
+    """
+    The entry point for the console
+    """
+    prompt = '(hbnb) '
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
-        print()
         return True
 
     def do_EOF(self, arg):
         """Exit the program"""
+        print()
         return True
 
     def emptyline(self):
