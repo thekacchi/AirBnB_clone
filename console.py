@@ -85,13 +85,13 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
-     def do_all(self, arg):
-        if not arg:
-            all_objs = storage.all()
-            objs_list = []
-            for obj in all_objs.values():
-                objs_list.append(str(obj))
-            print(objs_list)
+    def do_all(self, arg):
+    if not arg:
+        all_objs = storage.all()
+        objs_list = []
+        for obj in all_objs.values():
+            objs_list.append(str(obj))
+        print(objs_list)
 
     def do_update(self, arg):
         args = arg.split()
