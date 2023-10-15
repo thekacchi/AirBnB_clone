@@ -26,8 +26,8 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing on an empty line"""
         pass
-
-    def do_create(self,arg):
+         
+     def do_create(self,arg):
         """
            Creates a new instance.
            saves it (to the JSON file) and prints the id
@@ -44,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.valid_class_names[arg]()
         new_instance.save()
         print(new_instance.id)
-    def do_show(self, arg):
+     def do_show(self, arg):
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -62,7 +62,7 @@ class HBNBCommand(cmd.Cmd):
             print(obj)
         else:
             print("** no instance found **")
-    def do_destroy(self, arg):
+     def do_destroy(self, arg):
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -81,14 +81,14 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
         else:
             print("** no instance found **")
-   def do_all(self, arg):
+     def do_all(self, arg):
         if not arg:
             all_objs = storage.all()
             objs_list = []
             for obj in all_objs.values():
                 objs_list.append(str(obj))
             print(objs_list)
-    def do_update(self, arg):
+     def do_update(self, arg):
         args = arg.split()
         if not arg:
             print("** class name missing **")
