@@ -85,7 +85,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
-    def do_all(self, arg):
+   def do_all(self, arg):
     if not arg:
         all_objs = storage.all()
         objs_list = []
