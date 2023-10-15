@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+"""This module contains the cmd loop and methods"""
+
 import cmd
 from models import storage
 from models.base_model import BaseModel
