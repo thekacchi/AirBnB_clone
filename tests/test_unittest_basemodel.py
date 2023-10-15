@@ -13,9 +13,9 @@ class TestBaseModel(unittest.TestCase):
         self.my_model.name = "My First Model"
         self.my_model.my_number = 89
 
-     def test_instance_creation(self):
-         """test the creation of the instance
-         """
+    def test_instance_creation(self):
+        """test the creation of the instance
+        """
         my_model = BaseModel()
         self.assertIsInstance(my_model, BaseModel)
 
