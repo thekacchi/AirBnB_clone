@@ -11,6 +11,7 @@ from models.city import City
 from models.place import Place
 from models.review import Review
 
+
 class FileStorage:
     """FileStorage class definition"""
     __file_path = "file.json"
@@ -38,7 +39,7 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
-            
+
             for key, value in data.items():
                 class_name, obj_id = key.split('.')
                 class_obj = globals()[class_name]
