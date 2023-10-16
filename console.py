@@ -116,7 +116,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """The update method"""
-        args = arg.split()
+        args = arg.split(" ")
         if not arg:
             print("** class name missing **")
             return
@@ -126,10 +126,9 @@ class HBNBCommand(cmd.Cmd):
         if len(args) < 2:
             print("** instance id missing **")
             return
-        key = "{}.{}".format(args[0], args[1])
-        all_objs = models.storage.all()
-        obj = all_objs.get(key)
-        if not obj:
+        model, id = args[:2]
+        instance = models.storage.all()[f"{model}.{id}"]
+        if not instance:
             print("** no instance found **")
             return
         if len(args) < 3:
@@ -138,19 +137,10 @@ class HBNBCommand(cmd.Cmd):
         if len(args) < 4:
             print("** value missing **")
             return
-        attribute = args[2]
-        value = args[3]
-        if hasattr(obj, attribute):
-            if attribute == "created_at" or attribute == "updated_at":
-                pass
-            else:
-                attr_type = type(getattr(obj, attribute))
-                try:
-                    value = attr_type(value)
-                except ValueError as ve:
-                    print(f"Error: Invalid value - {ve}")
-                setattr(obj, attribute, value)
-                obj.save()
+        attr, value = args[2:4]
+
+        instance.__dict__[eval(attr)] = eval(value)
+        instance.save()
 
     def do_quit(self, arg):
         """Quits the cmd module"""
@@ -166,15 +156,17 @@ class HBNBCommand(cmd.Cmd):
         if model not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
         print(len([y for y in models.storage.all().values()
-	           if type(y) is eval(model)]))
+                   if type(y) is eval(model)]))
 
     def default(self, cmd_line):
         """Executes customized models commands"""
-        callback = {"all": self.do_all,
-	            "update": self.do_update,
-	            "count": self.count,
-		    "destroy": self.do_destroy,
-		    "show": self.do_show}
+        callback = {
+                    "all": self.do_all,
+                    "update": self.do_update,
+                    "count": self.count,
+                    "destroy": self.do_destroy,
+                    "show": self.do_show
+        }
         cmd_list = cmd_line.split('.')
 
         if len(cmd_list) >= 2:
@@ -183,7 +175,7 @@ class HBNBCommand(cmd.Cmd):
                 cmd.Cmd.default(self, cmd_line)
                 return
 
-            if command in("all", "count"):
+            if command in ("all", "count"):
                 callback[command](cmd_list[0])
             elif command == "update":
                 args = self.argtok(cmd_list)
@@ -223,6 +215,7 @@ class HBNBCommand(cmd.Cmd):
         new_str = args[1][args[1].find('(')+1:args[1].find(')')]
         tokens.append(" ".join(new_str.split(", ")))
         return " ".join(i for i in tokens).strip()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
