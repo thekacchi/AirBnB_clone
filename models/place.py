@@ -9,10 +9,10 @@ class Place(BaseModel):
     user_id = ""
     name = ""
     description = 0
-    number_of_rooms = 0
-    number_of_bathrooms = ""
-    maximum_guests = 0
-    price_per_night = 0
-    latitude = 0
-    longitude = 0
-    amenities = []
+    number_rooms = 0
+    number_bathrooms = 0
+    max_guest = 0
+    price_by_night = 0
+    latitude = 0.0
+    longitude = 0.0
+    amenity_ids = []
