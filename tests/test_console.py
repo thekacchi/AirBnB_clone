@@ -14,10 +14,17 @@ import maths
 class TestingHBNBCommand(unittest.TestCase):
     """Testing the console"""
 
+
     def setUp(self):
         """Setup for Basic Tests"""
         self.cmd = HBNBCommand()
         self.file_path = "console.py"
+
+    def testPycodestyleCoding(self):
+        """Check for pycodestyle compliance"""
+        style = pycodestyle.StykeGuide(quiet=False)
+        p = style_check_files([self.file_path])
+        self.assertEqual(p.total_errors, 0, 'Fix pycodestyle'
 
     def tearDown(self):
         """Cleaning Up testing"""
@@ -25,6 +32,29 @@ class TestingHBNBCommand(unittest.TestCase):
             os.remove("file.json")
         except Exception:
             pass
+
+    def testQuit(self):
+        """The wuit command """
+        with patch('sys.stdout', new=StringIO()) as stdout:
+            self.cmd.onecmd("quit")
+            self.assertEqual('', stdout.getvalue())
+
+    def testEmptyLine(self):
+        """Testing empty input"""
+        with patch('sys.stdout', new=StringIO()) as stdout:
+            self.cmd.onecmd("\n")
+            self.assertEqual('', stdout.getvalue())
+
+    def testAll(self):
+        """Test the all command """
+        with patch('sys.stdout', new=StringIO()) as stdout:
+            self.cmd.onecmd("all octopus")
+	    self.assertEqual(TestHBNBCommand.class_not_found,
+	                     stdout.getvalue())
+        with patch('sys.stdout', new=String()) as stdout:
+            self.cmd.onecmd("all State")
+            self.assertEqual("[]\n", stdout.getvalue())
+
 
 if __name__ == '__main__':
     unittest.main()
