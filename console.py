@@ -161,6 +161,68 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def count(self, model):
+        """Retieves rhe number of instances of a class"""
+        if model not in HBNBCommand.valid_classes:
+            print("** class doesn't exist **")
+        print(len([y for y in models.storage.all().values()
+	           if type(y) is eval(model)]))
+
+    def default(self, cmd_line):
+        """Executes customized models commands"""
+        callback = {"all": self.do_all,
+	            "update": self.do_update,
+	            "count": self.count,
+		    "destroy": self.do_destroy,
+		    "show": self.do_show}
+        cmd_list = cmd_line.split('.')
+
+        if len(cmd_list) >= 2:
+            command = self.command(cmd_list[1])
+            if command not in callback:
+                cmd.Cmd.default(self, cmd_line)
+                return
+
+            if command in("all", "count"):
+                callback[command](cmd_list[0])
+            elif command == "update":
+                args = self.argtok(cmd_list)
+                if isinstance(args, list):
+                    key = args[0] + ' ' + args[1]
+                    for k, v in args[2].items():
+                        self.do_update(key + ' "{}" "{}"'.format(k, v))
+                else:
+                    self.do_update(args)
+            else:
+                callback[command](self.argtok(cmd_list))
+        else:
+            cmd.Cmd.default(self, line)
+
+    def command(self, arg):
+        """Command complements default"""
+        index = arg.find("(")
+        if index == -1:
+            return arg
+        return arg[:index]
+
+    def argtok(self, args):
+        """"Tokenizes args, Cleans too"""
+
+        tokens = []
+        tokens.append(args[0])
+        try:
+            my_dict = eval(
+                           args[1][args[1].find('{'):args[1].find('}')+1])
+        except Exception:
+            my_dict = None
+        if isinstance(my_dict, dict):
+            new_str = args[1][args[1].find('(')+1:args[1].find(')')]
+            tokens.append(((new_str.split(", "))[0]).strip('"'))
+            tokens.append(my_dict)
+            return tokens
+        new_str = args[1][args[1].find('(')+1:args[1].find(')')]
+        tokens.append(" ".join(new_str.split(", ")))
+        return " ".join(i for i in tokens).strip()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
