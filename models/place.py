@@ -1,4 +1,4 @@
-#!/usr/bin/puthon3
+#!/usr/bin/python3
 """Implementation of the Placeclass, which inherits from the BaseModel class"""
 from models.base_model import BaseModel
 
@@ -8,7 +8,7 @@ class Place(BaseModel):
     city_id = ""
     user_id = ""
     name = ""
-    description = 0
+    description = ""
     number_rooms = 0
     number_bathrooms = 0
     max_guest = 0
