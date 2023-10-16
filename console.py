@@ -2,37 +2,48 @@
 """This module contains the cmd loop and methods"""
 
 import cmd
-from models import storage
+import models
 from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
-    """The HBNBC command"""
+    """The HBNBC command Interpreter"""
     prompt = "(hbnb) "
-    valid_classes = ["BaseModel"]
+    valid_classes = {"BaseModel", "City", "Place", "State",
+                     "Review", "Amenity", "User"}
+                 
 
     def emptyline(self):
+        """Empty line (no input)"""
         pass
 
-    def do_create(self, arg):
+    def do_create(self, args):
         """
-           Creates a new instance of a specified class
+           Creates a new instance of a specified class/model
            and saves it to the JSON file.
            Usage: create <class_name>
         """
-        if not arg:
-            print("** class name missing **")
-            return
-        if arg not in HBNBCommand.valid_classes:
-            print("** class doesn't exist **")
-            return
+        try:
+            if not args:
+                raise SyntaxError()
 
-        new_instance = HBNBCommand.valid_classes[arg]()
-        new_instance.save()
-        print(new_instance.id)
+            model, *rest = args.split(" ")
+
+            if model in self.valid_classes:
+                new_instance = eval(model)()
+                models.storage.save()
+                print(new_instance.id)
+            else:
+                print("** class doesn't exist **")
+        except SyntaxError:
+            print("** class name missing **")
+
 
     def do_show(self, arg):
-        """the show method"""
+        """
+	   Prints the string representation of an instance
+           based on the class name and id
+        """
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -45,7 +56,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = "{}.{}".format(args[0], args[1])
-        all_objs = storage.all()
+        all_objs = models.storage.all()
         obj = all_objs.get(key)
         if obj:
             print(obj)
@@ -53,7 +64,10 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """The destroy method"""
+        """
+           Deletes an instance based on the class name
+           and id (saves the change into the JSON file).
+        """
         args = arg.split()
         if not arg:
             print("** class name missing **")
@@ -66,23 +80,27 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = "{}.{}".format(args[0], args[1])
-        all_objs = storage.all()
+        all_objs = models.storage.all()
         obj = all_objs.get(key)
         if obj:
             del all_objs[key]
-            storage.save()
+            models.storage.save()
         else:
             print("** no instance found **")
 
     def do_all(self, arg):
-        """the all method"""
+        """
+           Prints all string representation of all instances
+	   Based or not on the class name.
+        """
         args = arg.split()
-        all_objs = storage.all()
+        all_objs = models.storage.all()
         objs_list = []
         if not arg:
             for obj in all_objs.values():
                 objs_list.append(str(obj))
         else:
+            # Class name is provided
             if args[0] not in HBNBCommand.valid_classes:
                 print("** class doesn't exist **")
                 return
@@ -104,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         key = "{}.{}".format(args[0], args[1])
-        all_objs = storage.all()
+        all_objs = models.storage.all()
         obj = all_objs.get(key)
         if not obj:
             print("** no instance found **")
@@ -124,8 +142,8 @@ class HBNBCommand(cmd.Cmd):
                 attr_type = type(getattr(obj, attribute))
                 try:
                     value = attr_type(value)
-                except ValueError:
-                    pass
+                except ValueError as ve:
+                    print(f"Error: Invalid value - {ve}")
                 setattr(obj, attribute, value)
                 obj.save()
 
