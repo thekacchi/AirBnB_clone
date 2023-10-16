@@ -1,4 +1,4 @@
-#!/usr/bin/puthon3
+#!/usr/bin/python3
 """Implementation of the City class, which inherits from the BaseModel class"""
 from models.base_model import BaseModel
 

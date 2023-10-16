@@ -1,4 +1,4 @@
-#!/usr/bin/puthon3
+#!/usr/bin/python3
 """Implementation of the Amenity class. whihc inherits from BaseModel"""
 from models.base_model import BaseModel
 
