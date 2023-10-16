@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+!/usr/bin/python3
 """HBNBCommand Tests"""
 
 import unittest
@@ -13,7 +13,7 @@ import maths
 
 class TestingHBNBCommand(unittest.TestCase):
     """Testing the console"""
-
+    class_unfound = "** class doesn't exist **\n"
 
     def setUp(self):
         """Setup for Basic Tests"""
@@ -22,8 +22,8 @@ class TestingHBNBCommand(unittest.TestCase):
 
     def testPycodestyleCoding(self):
         """Check for pycodestyle compliance"""
-        style = pycodestyle.StykeGuide(quiet=False)
-        p = style_check_files([self.file_path])
+        style = pycodestyle.StyleGuide(quiet=False)
+        p = style.check_files([self.file_path])
         self.assertEqual(p.total_errors, 0, 'Fix pycodestyle'
 
     def tearDown(self):
@@ -49,8 +49,8 @@ class TestingHBNBCommand(unittest.TestCase):
         """Test the all command """
         with patch('sys.stdout', new=StringIO()) as stdout:
             self.cmd.onecmd("all octopus")
-	    self.assertEqual(TestHBNBCommand.class_not_found,
-	                     stdout.getvalue())
+            self.assertEqual(TestHBNBCommand.class_unfound,
+                             stdout.getvalue())
         with patch('sys.stdout', new=String()) as stdout:
             self.cmd.onecmd("all State")
             self.assertEqual("[]\n", stdout.getvalue())
