@@ -4,6 +4,13 @@
 import cmd
 import models
 from models.base_model import BaseModel
+from datetime import datetime
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -11,7 +18,6 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     valid_classes = {"BaseModel", "City", "Place", "State",
                      "Review", "Amenity", "User"}
-                 
 
     def emptyline(self):
         """Empty line (no input)"""
@@ -38,10 +44,9 @@ class HBNBCommand(cmd.Cmd):
         except SyntaxError:
             print("** class name missing **")
 
-
     def do_show(self, arg):
         """
-	   Prints the string representation of an instance
+           Prints the string representation of an instance
            based on the class name and id
         """
         args = arg.split()
@@ -91,7 +96,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """
            Prints all string representation of all instances
-	   Based or not on the class name.
+           Based or not on the class name.
         """
         args = arg.split()
         all_objs = models.storage.all()
