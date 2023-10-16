@@ -1,5 +1,5 @@
 #!/usr/bin/puthon3
-"""Implementation of the Review class, which inherits from the BaseModel class"""
+"""The Review class, which inherits from the BaseModel class"""
 from models.base_model import BaseModel
 
 

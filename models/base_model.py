@@ -15,7 +15,8 @@ class BaseModel:
                 if key != '__class__':
                     if key in ['created_at', 'updated_at']:
                         setattr(self, key,
-                                datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                                datetime.strptime(value,
+                                                  "%Y-%m-%dT%H:%M:%S.%f"))
                     else:
                         setattr(self, key, value)
         else:
@@ -25,7 +26,7 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
-     
+
     def __str__(self):
         """The string method"""
         return "[{}] ({}) {}".format(self.__class__.__name__,
